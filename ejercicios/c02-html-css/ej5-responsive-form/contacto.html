@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contacto - Tomás Islas</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <ul class="menu">
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="experiencia.html">Experiencia</a></li>
+            <li><a href="estudios.html">Estudios</a></li>
+            <li><a href="hobbies.html">Hobbies</a></li>
+            <li><a href="contacto.html">Contacto</a></li>
+        </ul>
+    </header>
+    <main>
+        <section class="card">
+            <h1>Contacto</h1>
+            <form class="formulario" action="#" method="post">
+                <div class="campo">
+                    <label for="nombre">Nombre</label>
+                    <input id="nombre" name="nombre" type="text" required minlength="2" autocomplete="name">
+                </div>
+                <div class="campo">
+                    <label for="email">Correo</label>
+                    <input id="email" name="email" type="email" required autocomplete="email">
+                </div>
+                <div class="campo">
+                    <label for="mensaje">Mensaje</label>
+                    <textarea id="mensaje" name="mensaje" required minlength="10" placeholder="Escribí al menos 10 caracteres."></textarea>
+                </div>
+                <button type="submit">Enviar</button>
+            </form>
+        </section>
+    </main>
+</body>
+</html>

@@ -1,0 +1,149 @@
+/* Ejercicio 5: formulario y responsive */
+
+:root {
+    --fondo: #f0fdfa;
+    --texto: #134e4a;
+    --back-color: #0f766e;
+    --radio: 0.5rem;
+    --sombra: 0 2px 10px rgba(15, 118, 110, 0.25);
+    --espacio: 1rem;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: var(--espacio);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--fondo);
+    color: var(--texto);
+    font-family: Arial, sans-serif;
+}
+
+main {
+    flex: 1;
+}
+
+header {
+    margin-bottom: var(--espacio);
+}
+
+.menu {
+    list-style: none;
+    margin: 0;
+    padding: var(--espacio);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--espacio);
+    background-color: var(--back-color);
+    border-radius: var(--radio);
+    box-shadow: var(--sombra);
+}
+
+.menu a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.menu a:hover {
+    text-decoration: underline;
+}
+
+.filas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--espacio);
+}
+
+.filas > .card {
+    flex: 1 1 260px;
+}
+
+.columna {
+    display: flex;
+    flex-direction: column;
+    gap: var(--espacio);
+}
+
+.card {
+    background-color: #fff;
+    padding: var(--espacio);
+    border-radius: var(--radio);
+    box-shadow: var(--sombra);
+}
+
+/* Formulario de contacto */
+.formulario label {
+    display: block;
+    margin-bottom: 0.35rem;
+    font-weight: bold;
+}
+
+.formulario .campo {
+    margin-bottom: 1rem;
+}
+
+.formulario input,
+.formulario textarea {
+    width: 100%;
+    max-width: 28rem;
+    padding: 0.5rem;
+    border: 1px solid #94a3a8;
+    border-radius: var(--radio);
+    font: inherit;
+}
+
+.formulario textarea {
+    min-height: 7rem;
+    resize: vertical;
+}
+
+.formulario button {
+    padding: 0.6rem 1.25rem;
+    background-color: var(--back-color);
+    color: #fff;
+    border: none;
+    border-radius: var(--radio);
+    font: inherit;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.formulario button:hover {
+    filter: brightness(1.05);
+}
+
+
+@media (max-width: 640px) {
+    body {
+        padding: 0.75rem;
+    }
+
+    .menu {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .menu a {
+        display: block;
+        text-align: center;
+    }
+
+    .filas {
+        flex-direction: column;
+    }
+
+    .filas > .card {
+        flex: 1 1 auto;
+    }
+
+    .formulario input,
+    .formulario textarea {
+        max-width: none;
+    }
+}
