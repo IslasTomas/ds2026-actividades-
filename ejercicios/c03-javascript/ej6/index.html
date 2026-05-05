@@ -1,0 +1,27 @@
+<!-- ● Agregar un <input type="text"> para nombre de producto y un
+<button> "Agregar"
+● Al hacer click, agregar el producto como un <li> dentro de un
+<ul> en la página
+● Cada item debe tener un botón "Eliminar" que al clickearlo
+borre ese item de la lista
+● Validar que el input no esté vacío
+● Agregar un contador que muestre "X productos en la lista" -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Ejercicio 6 - Lista de productos</h1>
+    <p>Lista de productos en JavaScript</p>
+    
+    <input type="text" id="inputProduct" placeholder="Ingrese nombre del nuevo producto" />
+    <button   type="button" id="buttonAddProduct">Agregar</button>
+    <ul id="listProducts"></ul>
+    <p id="counterProducts">0 productos en la lista</p>
+    <script src="app.js"></script>
+</body>
+</html>
