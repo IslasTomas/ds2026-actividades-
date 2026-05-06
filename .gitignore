@@ -1,0 +1,12 @@
+
+**/node_modules/**
+**/package-lock.json
+**/package.json
+**/tsconfig.json
+**/tsconfig.json.map
+**/tsconfig.json.map.gz
+**/tsconfig.json.map.gz.map
+**/tsconfig.json.map.gz.map.gz
+**/tsconfig.json.map.gz.map.gz.map
+**/tsconfig.json.map.gz.map.gz.map.gz
+**/tsconfig.json.map.gz.map.gz.map.gz.map
