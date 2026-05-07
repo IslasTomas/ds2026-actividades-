@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejercicio 3 - Formulario</title>
+    </head> 
+    <body>
+    <h1>Ejercicio 3 - Formulario</h1>
+    <form id="libroFormulario">
+        <div id="errorFormulario"></div>
+
+
+        <label for="titulo">titulo</label>
+        <input type="text" id="titulo" name="titulo">   
+        
+        <label for="autor">autor</label>
+        <input type="text" id="autor" name="autor">
+        
+        <label for="precio">precio</label>
+        <input type="number" id="precio" name="precio">
+        
+        <label for="disponible">disponible</label>
+        <input type="checkbox" id="disponible" name="disponible">
+        
+        <label for="genero">genero</label>
+        <input type="text" id="genero" name="genero">
+        <button type="submit">Agregar libro</button>
+    </form>
+
+    <h1>Catálogo</h1>
+    <input type="text" id="filtroAutor">
+    <button id="filtrar">Filtrar</button>
+    <button id="mostrarDisponibles">Solo disponibles</button>
+    <button id="mostrarTodos">Ver todos</button>
+    <ul id="listado">LIBROS EN EL CATALOGO</ul>
+    <p id="stats">CANTIDAD Y PRECIO PROMEDIO</p>
+    <script src="app.js"></script>
+</body>
+</html>
