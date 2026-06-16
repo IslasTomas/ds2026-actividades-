@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Card, Button } from 'react-bootstrap';
-import type { Libro } from '../types/libros';
+import type Libro  from '../types/libros';
 
 
 type Props = { libro: Libro };

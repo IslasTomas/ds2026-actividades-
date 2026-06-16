@@ -1,5 +1,5 @@
 
-import type { Libro } from '../types/libros';
+import type Libro  from '../types/libros';
 
 export const libros: Libro[] = [
     { id: 1, titulo: "El principito",        autor: "Saint-Exupéry",  imagen: "https://picsum.photos/seed/libro1/400/240", precio: 8990 },
