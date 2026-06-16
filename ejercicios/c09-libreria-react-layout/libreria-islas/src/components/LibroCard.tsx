@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import { Card, Button } from 'react-bootstrap';
 import type Libro  from '../types/libros';
@@ -16,7 +17,7 @@ export default function LibroCard({ libro }: Props) {
         <Card.Text className="text-muted">{libro.autor}</Card.Text>
         <Card.Text className="fw-bold">${libro.precio}</Card.Text>
             <div className="mt-auto d-flex gap-2">
-          <Button variant="primary" size="sm">Ver más</Button>
+          <Button as={Link} to={`/libros/${libro.id}`} variant="primary" size="sm">Ver más</Button>
           <Button
             key={String(meGusta)}
             variant={meGusta ? 'danger' : 'outline-danger'}

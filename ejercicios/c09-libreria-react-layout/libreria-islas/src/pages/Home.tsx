@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import LibroCard from '../components/LibroCard';
@@ -12,7 +13,7 @@ export default function Home() {
         <Container>
           <h1 className='text-white fw-bold'>Bienvenido a Libreria Digital</h1>
           <p className="lead">Encontra clasicos y novedades. Explora el catalogo.</p>
-          <Button variant="light" size="lg">Ir al catalogo</Button>
+          <Button as={Link} to="/catalogo" variant="light" size="lg">Ir al catalogo</Button>
         </Container>
       </div>
       <Container className="my-5">
