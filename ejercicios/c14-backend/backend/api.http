@@ -1,0 +1,7 @@
+@host = http://localhost:3000
+
+### Ping de la API
+GET {{host}}/
+
+### Listar todos los libros
+GET {{host}}/libros
