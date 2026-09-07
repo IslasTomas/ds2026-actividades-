@@ -1,0 +1,122 @@
+@host = http://localhost:3000/api
+
+# Los id de abajo asumen la base recien creada:
+#   docker compose exec api npx prisma migrate reset --force
+#   docker compose exec api npx prisma db seed
+# Asi los libros quedan con id 1..6 y los autores con id 1..5.
+
+# ============================== LIBROS ==============================
+
+### Listar todos los libros
+GET {{host}}/libros
+
+### Traer un libro por id
+GET {{host}}/libros/1
+
+### Crear un libro
+POST {{host}}/libros
+Content-Type: application/json
+
+{
+  "titulo": "Fahrenheit 451",
+  "autor": "Bradbury",
+  "imagen": "https://picsum.photos/seed/libro7/400/240",
+  "precio": 10500
+}
+
+### Modificar un libro
+PUT {{host}}/libros/1
+Content-Type: application/json
+
+{
+  "titulo": "El principito (edicion nueva)",
+  "autor": "Saint-Exupery",
+  "imagen": "https://picsum.photos/seed/libro1/400/240",
+  "precio": 9990
+}
+
+### Borrar un libro
+DELETE {{host}}/libros/6
+
+# ============================= AUTORES ==============================
+
+### Listar todos los autores
+GET {{host}}/autores
+
+### Traer un autor por id
+GET {{host}}/autores/1
+
+### Crear un autor
+POST {{host}}/autores
+Content-Type: application/json
+
+{
+  "nombre": "Ray Bradbury",
+  "nacionalidad": "Estados Unidos"
+}
+
+### Modificar un autor
+PUT {{host}}/autores/3
+Content-Type: application/json
+
+{
+  "nombre": "Julio Florencio Cortazar",
+  "nacionalidad": "Argentina"
+}
+
+### Borrar un autor
+DELETE {{host}}/autores/5
+
+# ========================== CASOS DE ERROR ==========================
+
+### 404 - libro que no existe
+GET {{host}}/libros/999
+
+### 404 - modificar un libro que no existe
+PUT {{host}}/libros/999
+Content-Type: application/json
+
+{
+  "titulo": "No existe",
+  "autor": "Nadie",
+  "imagen": "",
+  "precio": 0
+}
+
+### 404 - borrar un libro que no existe
+DELETE {{host}}/libros/999
+
+### 404 - autor que no existe
+GET {{host}}/autores/999
+
+### 404 - modificar un autor que no existe
+PUT {{host}}/autores/999
+Content-Type: application/json
+
+{
+  "nombre": "No existe",
+  "nacionalidad": "Ninguna"
+}
+
+### 404 - borrar un autor que no existe
+DELETE {{host}}/autores/999
+
+### 400 - crear un libro sin titulo
+POST {{host}}/libros
+Content-Type: application/json
+
+{
+  "autor": "Sin titulo",
+  "precio": 100
+}
+
+### 400 - crear un autor sin nombre
+POST {{host}}/autores
+Content-Type: application/json
+
+{
+  "nacionalidad": "Argentina"
+}
+
+### 400 - id que no es un numero
+GET {{host}}/libros/abc

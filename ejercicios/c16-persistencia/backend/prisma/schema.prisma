@@ -1,0 +1,26 @@
+// Schema de la libreria. Dos entidades independientes: no hay relacion
+// entre Libro y Autor, cada una es su propia tabla.
+
+generator client {
+  provider     = "prisma-client"
+  output       = "../generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Libro {
+  id     Int    @id @default(autoincrement())
+  titulo String
+  autor  String
+  imagen String @default("")
+  precio Int    @default(0)
+}
+
+model Autor {
+  id           Int    @id @default(autoincrement())
+  nombre       String
+  nacionalidad String @default("")
+}
