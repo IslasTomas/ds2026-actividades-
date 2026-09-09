@@ -1,0 +1,272 @@
+@host = http://localhost:3000/api
+
+# Los id de abajo asumen la base recien creada. Los requests estan en orden:
+# correrlos de arriba hacia abajo.
+#   docker compose exec api npx prisma migrate reset --force
+#   docker compose exec api npx prisma db seed
+# Queda: autores 1..6, libros 1..6 y dos usuarios del seed.
+#   admin@libreria.com   / admin1234    (ADMIN)
+#   cliente@libreria.com / cliente1234  (CLIENTE)
+# Las categorias, en el orden del seed, son 1 Novela, 2 Cuento, 3 Poesia,
+# 4 Clasico, 5 Latinoamericana, 6 Infantil.
+
+# ======================== AUTENTICACION =============================
+
+### 1. Registrarse: 201 y en la respuesta no viene el passwordHash
+POST {{host}}/auth/registro
+Content-Type: application/json
+
+{
+  "email": "nuevo@libreria.com",
+  "password": "nuevo1234",
+  "nombre": "Usuario Nuevo"
+}
+
+### 2. Registrarse con un mail ya usado: 409
+POST {{host}}/auth/registro
+Content-Type: application/json
+
+{
+  "email": "nuevo@libreria.com",
+  "password": "otra1234",
+  "nombre": "Repetido"
+}
+
+### 3. Registrarse con una password debil: 400
+POST {{host}}/auth/registro
+Content-Type: application/json
+
+{
+  "email": "debil@libreria.com",
+  "password": "corta",
+  "nombre": "Password Debil"
+}
+
+### 4. Login del ADMIN: 200 con el token
+# @name loginAdmin
+POST {{host}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@libreria.com",
+  "password": "admin1234"
+}
+
+@tokenAdmin = {{loginAdmin.response.body.token}}
+
+### Login del CLIENTE (para el caso 11)
+# @name loginCliente
+POST {{host}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "cliente@libreria.com",
+  "password": "cliente1234"
+}
+
+@tokenCliente = {{loginCliente.response.body.token}}
+
+### 5. Login con un mail que no existe: 401 con mensaje generico
+POST {{host}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "noexiste@libreria.com",
+  "password": "loquesea1"
+}
+
+### 6. Login con la password equivocada: el mismo 401 que el caso 5
+POST {{host}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@libreria.com",
+  "password": "incorrecta1"
+}
+
+### 7. Quien soy, con el token: 200
+GET {{host}}/auth/yo
+Authorization: Bearer {{tokenAdmin}}
+
+### 8. Quien soy, sin token: 401
+GET {{host}}/auth/yo
+
+### 9. Quien soy, con un token inventado: 401
+GET {{host}}/auth/yo
+Authorization: Bearer esto.no.es-un-token
+
+### 10. Listar libros sin token: 200, la lectura es publica
+GET {{host}}/libros
+
+### 11. Crear un libro con token de CLIENTE: 403
+POST {{host}}/libros
+Authorization: Bearer {{tokenCliente}}
+Content-Type: application/json
+
+{
+  "titulo": "Libro del cliente",
+  "autorId": 1
+}
+
+### 12. Crear un libro con token de ADMIN: 201
+POST {{host}}/libros
+Authorization: Bearer {{tokenAdmin}}
+Content-Type: application/json
+
+{
+  "titulo": "Fahrenheit 451",
+  "autorId": 1,
+  "imagen": "https://picsum.photos/seed/libro7/400/240",
+  "precio": 10500,
+  "categoriaIds": [1, 5]
+}
+
+# ============================== LIBROS ==============================
+
+### Detalle de un libro, con autor y categorias (publico)
+GET {{host}}/libros/1
+
+### Modificar un libro (categoriaIds reemplaza la lista entera)
+PUT {{host}}/libros/1
+Authorization: Bearer {{tokenAdmin}}
+Content-Type: application/json
+
+{
+  "precio": 9990,
+  "categoriaIds": [4]
+}
+
+### Borrar un libro
+DELETE {{host}}/libros/6
+Authorization: Bearer {{tokenAdmin}}
+
+### Escribir sin token: 401
+DELETE {{host}}/libros/5
+
+# ============================= AUTORES ==============================
+
+### Listar los autores (publico)
+GET {{host}}/autores
+
+### Traer un autor por id (publico)
+GET {{host}}/autores/1
+
+### Crear un autor
+POST {{host}}/autores
+Authorization: Bearer {{tokenAdmin}}
+Content-Type: application/json
+
+{
+  "nombre": "Ray Bradbury",
+  "nacionalidad": "Estados Unidos"
+}
+
+### Modificar un autor
+PUT {{host}}/autores/3
+Authorization: Bearer {{tokenAdmin}}
+Content-Type: application/json
+
+{
+  "nombre": "Julio Florencio Cortazar"
+}
+
+### Borrar un autor que se quedo sin libros
+DELETE {{host}}/autores/6
+Authorization: Bearer {{tokenAdmin}}
+
+# ====================== 400 - datos invalidos =======================
+
+### El id de la URL no es un numero
+GET {{host}}/libros/abc
+
+### Crear un libro sin titulo
+POST {{host}}/libros
+Authorization: Bearer {{tokenAdmin}}
+Content-Type: application/json
+
+{
+  "autorId": 1
+}
+
+### Crear un libro con precio negativo
+POST {{host}}/libros
+Authorization: Bearer {{tokenAdmin}}
+Content-Type: application/json
+
+{
+  "titulo": "Precio roto",
+  "autorId": 1,
+  "precio": -100
+}
+
+### Modificar sin mandar ningun campo
+PUT {{host}}/libros/1
+Authorization: Bearer {{tokenAdmin}}
+Content-Type: application/json
+
+{}
+
+### Crear un autor sin nombre
+POST {{host}}/autores
+Authorization: Bearer {{tokenAdmin}}
+Content-Type: application/json
+
+{
+  "nacionalidad": "Argentina"
+}
+
+# ======================== 404 - no existe ===========================
+
+### Libro que no existe
+GET {{host}}/libros/999
+
+### Modificar un libro que no existe
+PUT {{host}}/libros/999
+Authorization: Bearer {{tokenAdmin}}
+Content-Type: application/json
+
+{
+  "precio": 100
+}
+
+### Borrar un libro que no existe
+DELETE {{host}}/libros/999
+Authorization: Bearer {{tokenAdmin}}
+
+### Autor que no existe
+GET {{host}}/autores/999
+
+# ========================= 409 - conflicto ==========================
+
+### Titulo repetido (P2002)
+POST {{host}}/libros
+Authorization: Bearer {{tokenAdmin}}
+Content-Type: application/json
+
+{
+  "titulo": "Rayuela",
+  "autorId": 3
+}
+
+### Nombre de autor repetido (P2002)
+POST {{host}}/autores
+Authorization: Bearer {{tokenAdmin}}
+Content-Type: application/json
+
+{
+  "nombre": "Jorge Luis Borges"
+}
+
+### Libro con un autorId que no existe (P2003)
+POST {{host}}/libros
+Authorization: Bearer {{tokenAdmin}}
+Content-Type: application/json
+
+{
+  "titulo": "Libro sin autor",
+  "autorId": 999
+}
+
+### Borrar un autor que todavia tiene libros (P2003)
+DELETE {{host}}/autores/1
+Authorization: Bearer {{tokenAdmin}}
