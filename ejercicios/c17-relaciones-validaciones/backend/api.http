@@ -1,0 +1,155 @@
+@host = http://localhost:3000/api
+
+# Los id de abajo asumen la base recien creada. Los requests estan en orden:
+# correrlos de arriba hacia abajo.
+#   docker compose exec api npx prisma migrate reset --force
+#   docker compose exec api npx prisma db seed
+# Queda: autores 1..6 y libros 1..6. Las categorias, en el orden del seed,
+# son 1 Novela, 2 Cuento, 3 Poesia, 4 Clasico, 5 Latinoamericana, 6 Infantil.
+
+# ============================== LIBROS ==============================
+
+### Listar los libros (cada uno con su autor)
+GET {{host}}/libros
+
+### Detalle de un libro (con autor y categorias)
+GET {{host}}/libros/1
+
+### Crear un libro enganchado a un autor y a dos categorias
+POST {{host}}/libros
+Content-Type: application/json
+
+{
+  "titulo": "Fahrenheit 451",
+  "autorId": 1,
+  "imagen": "https://picsum.photos/seed/libro7/400/240",
+  "precio": 10500,
+  "categoriaIds": [1, 5]
+}
+
+### Modificar un libro (categoriaIds reemplaza la lista entera)
+PUT {{host}}/libros/1
+Content-Type: application/json
+
+{
+  "precio": 9990,
+  "categoriaIds": [4]
+}
+
+### Borrar un libro
+DELETE {{host}}/libros/6
+
+# ============================= AUTORES ==============================
+
+### Listar los autores
+GET {{host}}/autores
+
+### Traer un autor por id
+GET {{host}}/autores/1
+
+### Crear un autor
+POST {{host}}/autores
+Content-Type: application/json
+
+{
+  "nombre": "Ray Bradbury",
+  "nacionalidad": "Estados Unidos"
+}
+
+### Modificar un autor
+PUT {{host}}/autores/3
+Content-Type: application/json
+
+{
+  "nombre": "Julio Florencio Cortazar"
+}
+
+### Borrar un autor que se quedo sin libros
+DELETE {{host}}/autores/6
+
+# ====================== 400 - datos invalidos =======================
+
+### El id de la URL no es un numero
+GET {{host}}/libros/abc
+
+### Crear un libro sin titulo
+POST {{host}}/libros
+Content-Type: application/json
+
+{
+  "autorId": 1
+}
+
+### Crear un libro con precio negativo
+POST {{host}}/libros
+Content-Type: application/json
+
+{
+  "titulo": "Precio roto",
+  "autorId": 1,
+  "precio": -100
+}
+
+### Modificar sin mandar ningun campo
+PUT {{host}}/libros/1
+Content-Type: application/json
+
+{}
+
+### Crear un autor sin nombre
+POST {{host}}/autores
+Content-Type: application/json
+
+{
+  "nacionalidad": "Argentina"
+}
+
+# ======================== 404 - no existe ===========================
+
+### Libro que no existe
+GET {{host}}/libros/999
+
+### Modificar un libro que no existe
+PUT {{host}}/libros/999
+Content-Type: application/json
+
+{
+  "precio": 100
+}
+
+### Borrar un libro que no existe
+DELETE {{host}}/libros/999
+
+### Autor que no existe
+GET {{host}}/autores/999
+
+# ========================= 409 - conflicto ==========================
+
+### Titulo repetido (P2002)
+POST {{host}}/libros
+Content-Type: application/json
+
+{
+  "titulo": "Rayuela",
+  "autorId": 3
+}
+
+### Nombre de autor repetido (P2002)
+POST {{host}}/autores
+Content-Type: application/json
+
+{
+  "nombre": "Jorge Luis Borges"
+}
+
+### Libro con un autorId que no existe (P2003)
+POST {{host}}/libros
+Content-Type: application/json
+
+{
+  "titulo": "Libro sin autor",
+  "autorId": 999
+}
+
+### Borrar un autor que todavia tiene libros (P2003)
+DELETE {{host}}/autores/1
