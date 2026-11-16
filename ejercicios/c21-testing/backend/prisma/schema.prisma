@@ -1,0 +1,54 @@
+// Schema de la libreria con relaciones y usuarios.
+//   Autor 1:N Libro       un autor tiene muchos libros
+//   Libro N:M Categoria   un libro esta en varias categorias y viceversa
+
+generator client {
+  provider     = "prisma-client"
+  output       = "../generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Autor {
+  id           Int     @id @default(autoincrement())
+  nombre       String  @unique
+  nacionalidad String  @default("")
+  libros       Libro[]
+}
+
+model Libro {
+  id         Int         @id @default(autoincrement())
+  titulo     String      @unique
+  imagen     String      @default("")
+  precio     Int         @default(0)
+  // Lado N de la relacion 1:N. Sin onDelete, Postgres no deja borrar un
+  // autor que todavia tiene libros (eso es lo que devuelve el P2003).
+  autorId    Int
+  autor      Autor       @relation(fields: [autorId], references: [id])
+  categorias Categoria[]
+}
+
+model Categoria {
+  id     Int     @id @default(autoincrement())
+  nombre String  @unique
+  libros Libro[]
+}
+
+// Los dos roles que existen. Quien se registra desde la API arranca siempre
+// como CLIENTE: el rol no se acepta en el body del registro.
+enum Rol {
+  ADMIN
+  CLIENTE
+}
+
+model Usuario {
+  id           Int    @id @default(autoincrement())
+  email        String @unique
+  // Nunca se guarda la contrasena, solo su hash de bcrypt.
+  passwordHash String
+  nombre       String
+  rol          Rol    @default(CLIENTE)
+}

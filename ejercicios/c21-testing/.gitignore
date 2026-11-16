@@ -1,0 +1,12 @@
+node_modules
+dist
+.env
+
+# Prisma Client generado a partir del schema (se recrea con `prisma generate`)
+generated
+
+# El .gitignore raiz ignora estos archivos en todo el repo, pero c16 los
+# necesita: sin package.json no hay dependencias de Prisma y la migracion
+# commiteada no se puede aplicar al clonar.
+!package.json
+!tsconfig.json
